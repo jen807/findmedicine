@@ -6,18 +6,17 @@ const API_KEY =
 export const fetchMedicineByFilters = async (filters) => {
   const queryParams = new URLSearchParams({
     serviceKey: API_KEY,
-    type: "json",
-    ...filters,
+    type: "json", // JSON 형식으로 응답받기
+    ...filters, // 필터 조건 추가
   });
 
   const url = `${BASE_URL}?${queryParams.toString()}`;
 
   try {
-    console.log(`Request URL: ${url}`);
     const response = await fetch(url, {
       method: "GET",
       headers: {
-        Accept: "application/json",
+        Accept: "application/json", // JSON 응답을 명시
       },
     });
 
@@ -25,8 +24,8 @@ export const fetchMedicineByFilters = async (filters) => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
-    return data;
+    const data = await response.json(); // JSON 응답 처리
+    return data.body.items.item; // 데이터에서 필요한 부분만 반환
   } catch (error) {
     console.error("Error fetching medicine data:", error);
     throw error;

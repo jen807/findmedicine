@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { fetchMedicineByFilters } from "../../api";
+import { fetchMedicineByFilters } from "../../api"; // api.js의 fetch 함수 임포트
 
 const Search = () => {
   const [filters, setFilters] = useState({
@@ -8,20 +8,20 @@ const Search = () => {
     line: "",
     form_code: "",
   });
-  const [results, setResults] = useState([]);
-  const [error, setError] = useState("");
+  const [results, setResults] = useState([]); // 검색 결과 저장
+  const [error, setError] = useState(""); // 에러 메시지 저장
 
   const handleInputChange = (e) => {
-    setFilters({
-      ...filters,
-      [e.target.name]: e.target.value,
-    });
+    setFilters((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value, // 입력값 반영
+    }));
   };
 
   const handleSearch = async () => {
     try {
       const data = await fetchMedicineByFilters(filters);
-      setResults(data.body.items); // API 응답에서 items를 가져옴
+      setResults(Array.isArray(data) ? data : [data]); // 결과를 배열 형태로 저장
       setError("");
     } catch (err) {
       console.error(err);
@@ -74,58 +74,24 @@ const Search = () => {
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "20px",
-          marginTop: "20px",
-        }}
-      >
+      <div>
         {results.length > 0 ? (
           results.map((item, index) => (
             <div
               key={index}
               style={{
                 border: "1px solid #ccc",
+                margin: "10px",
                 padding: "10px",
-                borderRadius: "8px",
-                width: "200px",
-                textAlign: "center",
-                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
               }}
             >
-              {item.ITEM_IMAGE ? (
-                <img
-                  src={item.ITEM_IMAGE}
-                  alt={item.ITEM_NAME}
-                  style={{
-                    width: "100%",
-                    height: "150px",
-                    objectFit: "cover",
-                    borderRadius: "4px",
-                  }}
-                />
-              ) : (
-                <div
-                  style={{
-                    width: "100%",
-                    height: "150px",
-                    backgroundColor: "#f0f0f0",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <p>이미지 없음</p>
-                </div>
-              )}
-              <h3 style={{ fontSize: "16px", margin: "10px 0" }}>
-                {item.ITEM_NAME}
-              </h3>
-              <p style={{ fontSize: "14px", color: "#666" }}>
-                {item.CLASS_NAME}
-              </p>
+              <h3>{item.ITEM_NAME}</h3>
+              <img
+                src={item.ITEM_IMAGE}
+                alt={item.ITEM_NAME}
+                style={{ width: "100px", height: "100px", objectFit: "cover" }}
+              />
+              <p>효능: {item.CLASS_NAME}</p>
             </div>
           ))
         ) : (
