@@ -24,7 +24,13 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://apis.data.go.kr",
+  "options": {
+    "allowedHosts": [
+      "localhost",
+      ".localhost"
+    ],
+    "proxy": "http://apis.data.go.kr"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
