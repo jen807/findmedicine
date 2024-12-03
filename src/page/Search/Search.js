@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { fetchMedicineByFilters } from "../../api"; // api.js의 fetch 함수 임포트
+import { fetchMedicineByFilters, fetchMedicineDetails } from "../../api";
 
 const Search = () => {
   const [filters, setFilters] = useState({
@@ -8,20 +8,39 @@ const Search = () => {
     line: "",
     form_code: "",
   });
-  const [results, setResults] = useState([]); // 검색 결과 저장
-  const [error, setError] = useState(""); // 에러 메시지 저장
+  const [results, setResults] = useState([]);
+  const [error, setError] = useState("");
 
   const handleInputChange = (e) => {
-    setFilters((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value, // 입력값 반영
-    }));
+    setFilters({
+      ...filters,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSearch = async () => {
     try {
       const data = await fetchMedicineByFilters(filters);
-      setResults(Array.isArray(data) ? data : [data]); // 결과를 배열 형태로 저장
+      if (data.length === 0) {
+        setError("검색 결과가 없습니다.");
+        setResults([]);
+        return;
+      }
+
+      // 두 번째 API 호출로 세부 정보 추가
+      const detailedResults = await Promise.all(
+        data.map(async (item) => {
+          const details = await fetchMedicineDetails(item.ITEM_SEQ);
+          return {
+            ...item,
+            효능: details.효능,
+            복용법: details.복용법,
+            보관법: details.보관법,
+          };
+        })
+      );
+
+      setResults(detailedResults);
       setError("");
     } catch (err) {
       console.error(err);
@@ -89,9 +108,11 @@ const Search = () => {
               <img
                 src={item.ITEM_IMAGE}
                 alt={item.ITEM_NAME}
-                style={{ width: "100px", height: "100px", objectFit: "cover" }}
+                style={{ width: "200px", height: "100px", objectFit: "cover" }}
               />
-              <p>효능: {item.CLASS_NAME}</p>
+              <p>효능: {item.효능}</p>
+              <p>복용법: {item.복용법}</p>
+              <p>보관법: {item.보관법}</p>
             </div>
           ))
         ) : (

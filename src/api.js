@@ -6,8 +6,8 @@ const API_KEY =
 export const fetchMedicineByFilters = async (filters) => {
   const queryParams = new URLSearchParams({
     serviceKey: API_KEY,
-    type: "json", // JSON 형식으로 응답받기
-    ...filters, // 필터 조건 추가
+    type: "json",
+    ...filters,
   });
 
   const url = `${BASE_URL}?${queryParams.toString()}`;
@@ -16,7 +16,7 @@ export const fetchMedicineByFilters = async (filters) => {
     const response = await fetch(url, {
       method: "GET",
       headers: {
-        Accept: "application/json", // JSON 응답을 명시
+        Accept: "application/json",
       },
     });
 
@@ -24,10 +24,56 @@ export const fetchMedicineByFilters = async (filters) => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json(); // JSON 응답 처리
-    return data.body.items.item; // 데이터에서 필요한 부분만 반환
+    const data = await response.json();
+    return data.body?.items || [];
   } catch (error) {
     console.error("Error fetching medicine data:", error);
+    throw error;
+  }
+};
+
+const DETAILS_BASE_URL =
+  "http://apis.data.go.kr/1471000/MdcinGrnIdntfcInfoService02/getMdcinDrugInfoList01";
+
+export const fetchMedicineDetails = async (itemSeq) => {
+  const queryParams = new URLSearchParams({
+    serviceKey: API_KEY,
+    type: "json",
+    itemSeq,
+  });
+
+  const url = `${DETAILS_BASE_URL}?${queryParams.toString()}`;
+  console.log("세부 정보 요청 URL:", url);
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("세부 정보 응답 데이터:", data);
+
+    if (!data.body || !data.body.items || !data.body.items[0]) {
+      throw new Error("API에서 유효한 데이터를 받지 못했습니다.");
+    }
+
+    const details = data.body.items[0];
+    console.log("세부 정보 아이템:", details);
+
+    return {
+      효능: details.EFCN || "정보 없음",
+      복용법: details.USE_METHOD_QTY || "정보 없음",
+      보관법: details.STORAGE_METHOD || "정보 없음",
+    };
+  } catch (error) {
+    console.error("Error fetching medicine details:", error);
     throw error;
   }
 };
