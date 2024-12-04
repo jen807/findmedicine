@@ -23,7 +23,7 @@ const Main = () => {
   return (
     <Container>
       <h1>'NICKNAME'님</h1>
-      <Button color="#FFD700" onClick={() => navigate("/filter")}>
+      <Button color="#FFD700" onClick={() => navigate("/search")}>
         모양으로 약 검색하기
       </Button>
       <Button color="#87CEFA" onClick={() => navigate("/saved")}>
