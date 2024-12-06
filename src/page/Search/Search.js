@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { fetchMedicineByFilters } from "../../api";
 import styled from "styled-components";
+import Group from "../../img/Logo.svg";
 
 const Container = styled.div`
   margin: 0 auto;
@@ -9,15 +10,54 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-const Con = styled.div`
+const Logo = styled.div`
+  background-image: url(${Group});
+  background-repeat: no-repeat;
   display: flex;
-  justify-content: space-between;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  background-color: #f2f2f2;
-  margin: 10px;
-  padding: 15px 10px;
-  border-radius: 10px;
+  width: 156px;
+  height: 110px;
+`;
+
+const Title = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const FilterContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const PanelGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+`;
+
+const PanelButton = styled.button`
+  background-color: ${(props) => (props.active ? "#FFD700" : "#FFF8DC")};
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  &:hover {
+    background-color: #ffeb99;
+  }
+`;
+
+const SearchResults = styled.div`
+  margin-top: 20px;
+`;
+
+const MedicineCard = styled.div`
+  border: 1px solid #ddd;
+  margin: 10px 0;
+  padding: 10px;
 `;
 
 const Search = () => {
@@ -28,19 +68,53 @@ const Search = () => {
   const [results, setResults] = useState([]);
   const [error, setError] = useState("");
 
-  const handleInputChange = (e) => {
-    setFilters({
-      ...filters,
-      [e.target.name]: e.target.value,
-    });
+  const shapes = [
+    "원형",
+    "타원형",
+    "장방형",
+    "반원형",
+    "삼각형",
+    "사각형",
+    "마름모형",
+    "오각형",
+    "육각형",
+    "팔각형",
+  ];
+  const colors = [
+    "하양",
+    "노랑",
+    "주황",
+    "분홍",
+    "연두",
+    "초록",
+    "청록",
+    "파랑",
+    "남색",
+    "자주",
+    "보라",
+    "회색",
+    "검색",
+    "투명",
+  ];
+
+  const handleShapeClick = (shape) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      drug_shape: shape === prevFilters.drug_shape ? "" : shape,
+    }));
+  };
+
+  const handleColorClick = (color) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      drug_color: color === prevFilters.drug_color ? "" : color,
+    }));
   };
 
   const handleSearch = async () => {
-    console.log("필터 값:", filters); // 디버깅용 로그
+    console.log("필터 값:", filters);
     try {
       const data = await fetchMedicineByFilters(filters);
-      console.log("필터링된 데이터:", data);
-
       if (data.length === 0) {
         setError("검색 결과가 없습니다.");
         setResults([]);
@@ -56,53 +130,58 @@ const Search = () => {
 
   return (
     <Container>
-      <h1>약 검색</h1>
-      <div>
-        <label>
-          모양:
-          <input
-            type="text"
-            name="drug_shape"
-            value={filters.drug_shape}
-            onChange={handleInputChange}
-          />
-        </label>
-        <label>
-          색깔:
-          <input
-            type="text"
-            name="drug_color"
-            value={filters.drug_color}
-            onChange={handleInputChange}
-          />
-        </label>
-      </div>
-      <button onClick={handleSearch}>검색</button>
+      <Title>
+        <Logo />
+      </Title>
+      <FilterContainer>
+        <div>
+          <h2>약의 모양은 어떤가요?</h2>
+          <PanelGrid>
+            {shapes.map((shape) => (
+              <PanelButton
+                key={shape}
+                active={filters.drug_shape === shape}
+                onClick={() => handleShapeClick(shape)}
+              >
+                {shape}
+              </PanelButton>
+            ))}
+          </PanelGrid>
+        </div>
+        <div>
+          <h2>약의 색깔은 어떤가요?</h2>
+          <PanelGrid>
+            {colors.map((color) => (
+              <PanelButton
+                key={color}
+                active={filters.drug_color === color}
+                onClick={() => handleColorClick(color)}
+              >
+                {color}
+              </PanelButton>
+            ))}
+          </PanelGrid>
+        </div>
+        <button onClick={handleSearch}>검색</button>
+      </FilterContainer>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <div>
-        {results.length > 0 ? (
-          results.map((item, index) => (
-            <Con key={index}>
-              <img
-                src={item.ITEM_IMAGE}
-                alt={item.ITEM_NAME}
-                style={{
-                  width: "380px",
-                  height: "150px",
-                  objectFit: "cover",
-                  borderRadius: "10px",
-                }}
-              />
-              <h3>{item.ITEM_NAME}</h3>
-              <p>효능: {item.CLASS_NAME || "정보 없음"}</p>
-            </Con>
-          ))
-        ) : (
-          <p>검색 결과가 없습니다.</p>
-        )}
-      </div>
+      <SearchResults>
+        {results.length > 0
+          ? results.map((item, index) => (
+              <MedicineCard key={index}>
+                <img
+                  src={item.ITEM_IMAGE}
+                  alt={item.ITEM_NAME}
+                  style={{ width: "100%", objectFit: "cover" }}
+                />
+                <h3>{item.ITEM_NAME}</h3>
+                <p>효능: {item.CLASS_NAME || "정보 없음"}</p>
+              </MedicineCard>
+            ))
+          : !error && <p>검색 결과가 없습니다.</p>}
+      </SearchResults>
     </Container>
   );
 };
