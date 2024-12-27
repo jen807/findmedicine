@@ -1,70 +1,32 @@
-# Getting Started with Create React App
+## 이게뭐약?
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 목적성
+어르신들이 약의 생김새를 보고 약의 정보를 쉽게 찾고, 복용 현황을 관리할 수 있도록 돕는 웹사이트입니다
 
-## Available Scripts
+## 구현 기능
+- 약 검색 기능
 
-In the project directory, you can run:
+사용자가 약의 외형 정보를 입력하여 검색 가능:
+색상 선택 (예: 흰색, 빨간색 등)
+모양 선택 (예: 원형, 타원형 등)
+적힌 글자 입력
+분할선 유무 선택
+검색 결과로 약의 정보를 제공:
+약 이름
+주요 성분
+복용법
+부작용 정보
+약 정보 요약 및 저장
 
-### `npm start`
+검색한 약의 정보를 간단하게 요약하여 화면에 표시.
+"사진으로 저장" 버튼을 눌러 요약된 화면을 이미지 파일로 저장 가능.
+복용 약 등록 및 관리 (로그인 필요)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- 복용 약 등록
+약 이름
+약 사진
+약 갯수
+복용 현황 확인 및 관리:
+체크박스를 통해 복용 여부 확인 가능.
+복용 완료 시 체크박스 활성화.
+필요 시 등록한 약 삭제 가능.
